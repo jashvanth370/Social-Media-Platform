@@ -5,6 +5,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/UsersRoutes');
+const postRoutes = require('./routes/PostRoutes');
 
 const app = express();
 
@@ -17,8 +18,11 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB error:", err));
 
-// Routes
+// User Routes
 app.use('/api/users', userRoutes);
+
+// POst routes
+app.use('/api/posts',postRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
