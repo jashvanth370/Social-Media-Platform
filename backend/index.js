@@ -9,6 +9,8 @@ const postRoutes = require('./routes/PostRoutes');
 
 const app = express();
 
+mongoose.set('strictQuery', false);
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
