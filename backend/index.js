@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path')
 
 const userRoutes = require('./routes/UsersRoutes');
 const postRoutes = require('./routes/PostRoutes');
@@ -22,6 +23,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // User Routes
 app.use('/api/users', userRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // POst routes
 app.use('/api/posts',postRoutes);

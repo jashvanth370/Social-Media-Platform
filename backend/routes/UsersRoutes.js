@@ -1,4 +1,5 @@
 const User = require('../models/Users'); // Use capital "User" for models
+const upload = require('../middleware/uploads')
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -93,6 +94,23 @@ router.get('/me', verifyToken, async (req, res) => {
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: 'Error fetching user data' });
+  }
+});
+
+//Profile pic
+router.post('/profile-pic', upload.single('profilePic'), async (req, res) => {
+  try {
+    const userId = req.body.userId; // Replace with req.user.id if using auth middleware
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    user.profilePic = `/uploads/profile_pics/${req.file.filename}`;
+    await user.save();
+
+    res.json({ message: 'Profile picture updated', profilePic: user.profilePic });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
   }
 });
 
