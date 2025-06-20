@@ -114,4 +114,12 @@ router.post('/profile-pic', upload.single('profilePic'), async (req, res) => {
   }
 });
 
+router.get('/getAll',verifyToken,async(req,res)=>{
+  try{
+    const users = await User.find();
+    res.status(200).json(users);
+  }catch (err) {
+    res.status(500).json({ error: 'Error fetching users data' });
+  }
+})
 module.exports = router;
