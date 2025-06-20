@@ -7,6 +7,7 @@ const path = require('path')
 
 const userRoutes = require('./routes/UsersRoutes');
 const postRoutes = require('./routes/PostRoutes');
+const messageRoutes = require('./routes/MessageRoutes')
 
 const app = express();
 
@@ -27,6 +28,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // POst routes
 app.use('/api/posts',postRoutes);
+
+//message routes
+app.use('/api/message',messageRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
