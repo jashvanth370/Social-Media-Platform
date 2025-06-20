@@ -114,6 +114,7 @@ router.post('/profile-pic', upload.single('profilePic'), async (req, res) => {
   }
 });
 
+//get all users
 router.get('/getAll',verifyToken,async(req,res)=>{
   try{
     const users = await User.find();
@@ -121,5 +122,81 @@ router.get('/getAll',verifyToken,async(req,res)=>{
   }catch (err) {
     res.status(500).json({ error: 'Error fetching users data' });
   }
-})
+});
+
+// GET user by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// UPDATE user by ID
+router.put('/:id', async (req, res) => {
+  try {
+    const updates = req.body;
+    const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// FOLLOW user
+router.put('/:id/follow', async (req, res) => {
+  try {
+    const targetUser = await User.findById(req.params.id);
+    const currentUser = await User.findById(req.body.currentUserId);
+
+    if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
+
+    if (targetUser.followers.includes(req.body.currentUserId)) {
+      return res.status(400).json({ message: 'You already follow this user' });
+    }
+
+    targetUser.followers.push(req.body.currentUserId);
+    currentUser.following.push(req.params.id);
+
+    await targetUser.save();
+    await currentUser.save();
+
+    res.status(200).json({ message: 'User followed successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// UNFOLLOW user
+router.put('/:id/unfollow', async (req, res) => {
+  try {
+    const targetUser = await User.findById(req.params.id);
+    const currentUser = await User.findById(req.body.currentUserId);
+
+    if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
+
+    if (!targetUser.followers.includes(req.body.currentUserId)) {
+      return res.status(400).json({ message: 'You do not follow this user' });
+    }
+
+    targetUser.followers.pull(req.body.currentUserId);
+    currentUser.following.pull(req.params.id);
+
+    await targetUser.save();
+    await currentUser.save();
+
+    res.status(200).json({ message: 'User unfollowed successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
