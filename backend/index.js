@@ -8,6 +8,7 @@ const path = require('path')
 const userRoutes = require('./routes/UsersRoutes');
 const postRoutes = require('./routes/PostRoutes');
 const messageRoutes = require('./routes/MessageRoutes')
+const notificationRoutes = require('./routes/Notification')
 
 const app = express();
 
@@ -31,6 +32,9 @@ app.use('/api/posts',postRoutes);
 
 //message routes
 app.use('/api/message',messageRoutes);
+
+//notification routes
+app.use('/api/notification',notificationRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
