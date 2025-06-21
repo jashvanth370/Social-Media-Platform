@@ -1,5 +1,5 @@
 export default function Post(){
     return <>
-    <h1>Post Page</h1>
+    <h1>Post Cart</h1>
     </>
 }
