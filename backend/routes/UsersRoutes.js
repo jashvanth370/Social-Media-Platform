@@ -98,7 +98,7 @@ router.get('/me', verifyToken, async (req, res) => {
 });
 
 //Profile pic
-router.post('/profile-pic', upload.single('profilePic'), async (req, res) => {
+router.post('/profile-pic',verifyToken,upload.single('profilePic'), async (req, res) => {
   try {
     const userId = req.body.userId; // Replace with req.user.id if using auth middleware
     const user = await User.findById(userId);
@@ -138,7 +138,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // UPDATE user by ID
-router.put('/:id', async (req, res) => {
+router.put('/:id',verifyToken,async (req, res) => {
   try {
     const updates = req.body;
     const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
@@ -152,7 +152,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // FOLLOW user
-router.put('/:id/follow', async (req, res) => {
+router.put('/:id/follow',verifyToken,async (req, res) => {
   try {
     const targetUser = await User.findById(req.params.id);
     const currentUser = await User.findById(req.body.currentUserId);
@@ -176,7 +176,7 @@ router.put('/:id/follow', async (req, res) => {
 });
 
 // UNFOLLOW user
-router.put('/:id/unfollow', async (req, res) => {
+router.put('/:id/unfollow',verifyToken,async (req, res) => {
   try {
     const targetUser = await User.findById(req.params.id);
     const currentUser = await User.findById(req.body.currentUserId);
