@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import userApi from '../api/userApi'
+import { useNavigate } from 'react-router-dom';
 
 
 export default function RegisterPage() {
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -20,6 +23,7 @@ export default function RegisterPage() {
             const user = await userApi.createUser(formData);
             console.log("user :",user.data)
             console.log("User Register Successfully ");
+            navigate('/login');
         }catch(error){
             console.log("Error response:", error);
             setError(error.response?.data?.message)
