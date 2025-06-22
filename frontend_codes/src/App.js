@@ -7,12 +7,14 @@ import CreatePost from './components/CreatePost';
 import PostCard from './components/PostCard';
 import FeedPage from './pages/FeedPage';
 import UserProfile from './pages/UserProfilePage';
+import Footer from './components/Footer';
 
 function App() {
   return (
     <Router>
       <Navbar />
-      <div className="App">
+      <div className="d-flex flex-column min-vh-100">
+        <main className="flex-grow-1">
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<LoginPage />} />
@@ -22,7 +24,9 @@ function App() {
           <Route path='/feed-page' element={<FeedPage />} />
           <Route path='/profile/:id' element={<UserProfile />} />
         </Routes>
+        </main>
       </div>
+      <Footer />
     </Router>
   );
 }
