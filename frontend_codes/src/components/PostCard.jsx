@@ -2,12 +2,17 @@ import React from 'react';
 import postApi from '../api/postApi';
 
 function PostCard({ post, onLike }) {
+
   const handleLike = async (e) => {
     e.preventDefault();
     const res = await postApi.LikePost(post._id);
     console.log("post :",res);
     onLike();
   };
+
+  const handleComment = async ()=>{
+
+  }
 
   return (
     <div className="card mb-3">
@@ -21,6 +26,9 @@ function PostCard({ post, onLike }) {
         <div>
           <button className="btn btn-outline-primary btn-sm me-2" onClick={handleLike}>
             like {post.likes.length}
+          </button>
+          <button className="btn btn-outline-primary btn-sm me-2" onClick={handleComment}>
+            comment  {post.comment}
           </button>
           <small className="text-muted">{new Date(post.createdAt).toLocaleString()}</small>
         </div>
