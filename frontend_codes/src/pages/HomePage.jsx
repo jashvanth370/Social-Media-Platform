@@ -12,7 +12,9 @@ function HomePage() {
         <div className="container">
           <h1 className="display-4 fw-bold mb-3">Connect. Share. Explore.</h1>
           <p className="lead mb-4">Join SocialSphere — your digital space to express, connect, and engage.</p>
-          <Link to="/register" className="btn btn-light btn-lg me-2">Get Started</Link>
+          {!isAuthenticated && 
+            <Link to="/register" className="btn btn-light btn-lg me-2">Get Started</Link>
+          }
           {!isAuthenticated && (
             <Link to="/login" className="btn btn-outline-light btn-lg">Login</Link>
           )}

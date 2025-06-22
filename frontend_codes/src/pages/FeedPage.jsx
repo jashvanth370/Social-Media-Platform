@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CreatePost from '../components/CreatePost';
 import PostCard from '../components/PostCard';
 import postApi from '../api/postApi';
+import { Link } from 'react-router-dom';
 
 function FeedPage() {
     const [posts, setPosts] = useState([]);
@@ -29,6 +30,8 @@ function FeedPage() {
     return (
         <div className="col-md-8 offset-md-2">
             <CreatePost onPostCreated={loadPosts} />
+
+            <button className="btn btn-outline-primary btn-lg "><Link to='/create-post'> add </Link></button>
 
             {posts.length === 0 ? (
                 <p className="text-center">No posts yet.</p>

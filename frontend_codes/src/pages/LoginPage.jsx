@@ -15,8 +15,9 @@ function Login() {
     const handleSubmit= async (e)=>{
         e.preventDefault();
         try{
-            const user = await userApi.loginUser(formData);
-            localStorage.setItem('token',user.token);
+            const response = await userApi.loginUser(formData);
+            console.log("token : ",response.token);
+            localStorage.setItem("token",response.token);
             navigate('/feed-page')
             console.log("User Login Successfully ");
         }catch(error){

@@ -11,7 +11,7 @@ const createPost = async (postData, id) => {
     return post.data;
 }
 
-
+//deleye post
 const deletePost = async (id)=>{
     const post=await axios.delete(`${BASE_URL}/posts/delete/${id}`)
     return post.data;
@@ -25,10 +25,15 @@ const LikePost = async (postId) => {
     }
   });
 }
-
-
+//all posts
 const fetchPosts = async()=>{
     const posts = await axios.get(`${BASE_URL}/posts/getAllPosts`);
+    return posts.data;
+}
+
+//fetch post by user
+const fetchPostsByUser = async (id)=>{
+    const posts = await axios.get(`${BASE_URL}/posts/profile/${id}`);
     return posts.data;
 }
 
@@ -38,6 +43,7 @@ const postApi = {
     deletePost,
     LikePost,
     fetchPosts,
+    fetchPostsByUser,
 }
 
 export default postApi;
