@@ -1,40 +1,88 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import userApi from '../api/userApi';
 
 function HomePage() {
+  const isAuthenticated = userApi.isAuthenticated();
+
   return (
     <div>
-      <div className="container text-center py-5">
-        <h1 className="display-4 fw-bold mb-3">Connect with the world.</h1>
-        <p className="lead mb-4">Join SocialSphere — a vibrant community to share your thoughts, photos, and life moments.</p>
-        <Link to="/register" className="btn btn-primary btn-lg me-2">Get Started</Link>
-        <Link to="/login" className="btn btn-outline-primary btn-lg">Login</Link>
-      </div>
+      {/* Hero Section */}
+      <section className="bg-danger text-white text-center py-5">
+        <div className="container">
+          <h1 className="display-4 fw-bold mb-3">Connect. Share. Explore.</h1>
+          <p className="lead mb-4">Join SocialSphere — your digital space to express, connect, and engage.</p>
+          <Link to="/register" className="btn btn-light btn-lg me-2">Get Started</Link>
+          {!isAuthenticated && (
+            <Link to="/login" className="btn btn-outline-light btn-lg">Login</Link>
+          )}
+        </div>
+      </section>
 
-
-      <div className="container py-5">
+      {/* Features */}
+      <section className="container py-5">
         <div className="row text-center">
-          <div className="col-md-4 mb-4">
-            <i className="bi bi-people fs-1 text-primary mb-3"></i>
+          <div className="col-md-4">
+            <i className="bi bi-people fs-1 text-danger mb-3"></i>
             <h5>Connect</h5>
-            <p>Find and follow people who inspire you.</p>
+            <p>Build friendships and communities that matter.</p>
           </div>
-          <div className="col-md-4 mb-4">
-            <i className="bi bi-image fs-1 text-primary mb-3"></i>
+          <div className="col-md-4">
+            <i className="bi bi-image fs-1 text-danger mb-3"></i>
             <h5>Share</h5>
-            <p>Post updates, images, and memories with ease.</p>
+            <p>Post updates, stories, and experiences with your circle.</p>
           </div>
-          <div className="col-md-4 mb-4">
-            <i className="bi bi-globe fs-1 text-primary mb-3"></i>
-            <h5>Explore</h5>
-            <p>Discover what others are sharing around the globe.</p>
+          <div className="col-md-4">
+            <i className="bi bi-globe2 fs-1 text-danger mb-3"></i>
+            <h5>Discover</h5>
+            <p>Stay inspired by exploring content from around the world.</p>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="bg-light py-5">
+        <div className="container text-center">
+          <h3 className="mb-4">What our users say</h3>
+          <div className="row">
+            <div className="col-md-4 mb-3">
+              <blockquote className="blockquote">
+                <p>"I love how easy it is to stay connected with my friends!"</p>
+                <footer className="blockquote-footer">Sarah, 21</footer>
+              </blockquote>
+            </div>
+            <div className="col-md-4 mb-3">
+              <blockquote className="blockquote">
+                <p>"Posting and sharing photos has never been this fun."</p>
+                <footer className="blockquote-footer">Jay, 27</footer>
+              </blockquote>
+            </div>
+            <div className="col-md-4 mb-3">
+              <blockquote className="blockquote">
+                <p>"SocialSphere feels like home for all my ideas."</p>
+                <footer className="blockquote-footer">Amara, 30</footer>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Screenshots */}
+      <section className="container py-5">
+        <h3 className="text-center mb-4">Peek Inside the App</h3>
+        <div className="row">
+          <div className="col-md-4 mb-3">
+            <img src="/images/feed-preview.png" className="img-fluid rounded shadow" alt="Feed preview" />
+          </div>
+          <div className="col-md-4 mb-3">
+            <img src="/images/profile-preview.png" className="img-fluid rounded shadow" alt="Profile preview" />
+          </div>
+          <div className="col-md-4 mb-3">
+            <img src="/images/chat-preview.png" className="img-fluid rounded shadow" alt="Chat preview" />
+          </div>
+        </div>
+      </section>
       
-      <footer className="bg-light text-center py-3">
-        <small>© {new Date().getFullYear()} SocialSphere. All rights reserved.</small>
-      </footer>
     </div>
   );
 }
