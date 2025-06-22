@@ -9,11 +9,10 @@ function FeedPage() {
     const loadPosts = async () => {
         try {
             const response = await postApi.fetchPosts();
-
-            if (Array.isArray(response.data)) {
-                setPosts(response.data);
+            if (Array.isArray(response)) {
+                setPosts(response);
             } else {
-                console.warn("Unexpected response structure:", response.data);
+                console.warn("Unexpected response structure:", response);
                 setPosts([]);
             }
         } catch (error) {

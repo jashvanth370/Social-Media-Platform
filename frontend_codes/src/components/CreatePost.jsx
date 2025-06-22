@@ -1,27 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import postApi from '../api/postApi';
+import { jwtDecode } from "jwt-decode";
 
 function CreatePost({ onPostCreated }) {
+  const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [error, setError] = useState('');
+  const [userId, setUserId] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("userId : ", userId);
 
     const formData = new FormData();
     formData.append('content', content);
     if (image) formData.append('image', image);
 
     try {
-      await postApi.createPost(formData);
+      const post = await postApi.createPost(formData, userId);
+      console.log("post:", post);
       setContent('');
       setImage(null);
-      onPostCreated(); // refresh post feed
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to post');
+      onPostCreated();
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to post');
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const userId = decoded.userId || decoded._id;
+        if (userId) {
+          setUserId(userId);
+        } else {
+          console.error("User ID not found in token");
+        }
+      } catch (err) {
+        console.error("Invalid token", err);
+      }
+    } else {
+      console.warn("No token found in localStorage");
+    }
+  }, []);
 
   return (
     <div className="card mb-4">

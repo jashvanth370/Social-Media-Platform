@@ -31,13 +31,7 @@ function HomePage() {
           </div>
         </div>
       </div>
-
-<div className="col-md-4 mb-4">
-            <i className="bi bi-globe fs-1 text-primary mb-3"></i>
-            <Link to="/feedback" className="btn btn-primary btn-lg me-2">Load more</Link>
-            
-          </div>
-
+      
       <footer className="bg-light text-center py-3">
         <small>© {new Date().getFullYear()} SocialSphere. All rights reserved.</small>
       </footer>

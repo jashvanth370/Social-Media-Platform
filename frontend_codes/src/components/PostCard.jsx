@@ -2,9 +2,11 @@ import React from 'react';
 import postApi from '../api/postApi';
 
 function PostCard({ post, onLike }) {
-  const handleLike = async () => {
-    await postApi.LikePost(post.post_id);
-    onLike(); // refresh feed
+  const handleLike = async (e) => {
+    e.preventDefault();
+    const res = await postApi.LikePost(post._id);
+    console.log("post :",res);
+    onLike();
   };
 
   return (
@@ -18,7 +20,7 @@ function PostCard({ post, onLike }) {
         {post.image && <img src={post.image} alt="post" className="img-fluid rounded mb-2" />}
         <div>
           <button className="btn btn-outline-primary btn-sm me-2" onClick={handleLike}>
-            ❤️ {post.likes.length}
+            like {post.likes.length}
           </button>
           <small className="text-muted">{new Date(post.createdAt).toLocaleString()}</small>
         </div>

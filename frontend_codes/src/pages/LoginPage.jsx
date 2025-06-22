@@ -1,9 +1,11 @@
 import { useState } from "react";
 import userApi from "../api/userApi";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -15,6 +17,7 @@ function Login() {
         try{
             const user = await userApi.loginUser(formData);
             localStorage.setItem('token',user.token);
+            navigate('/feed-page')
             console.log("User Login Successfully ");
         }catch(error){
             console.log("Error response:", error);
