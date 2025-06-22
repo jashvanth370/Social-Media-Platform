@@ -89,15 +89,13 @@ router.get('/profile/:id', async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User Not Found" });
         }
-        const posts = await Post.find({author: user._id}).populate('author');
-        if (posts.length == 0) {
-            res.status(404).json({ message: "This user do not posts" })
-        }
-        res.status(200).json(posts);
+        const posts = await Post.find({ author: user._id }).populate('author', 'name profilePic');
+        res.status(200).json(posts); // ✅ Always return 200
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-})
+});
+
 
 //get all posts
 router.get('/getAllPosts',async(req,res)=>{
