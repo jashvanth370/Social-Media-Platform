@@ -12,11 +12,19 @@ const loginUser = async (userData)=>{
     return response.data;
 }
 
-
+const userProfile = async (id) =>{
+  const response = await axios.get(`${BASE_URL}/users/${id}`,{
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
+  return response.data;
+}
 
 const userApi = {
   createUser,
-  loginUser
+  loginUser,
+  userProfile
 };
 
 export default userApi;
