@@ -25,6 +25,12 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    authorSnapshot: 
+    {
+    name: String,
+    email: String,
+    profilePic: String
+    },
     content:
     {
         type: String,
