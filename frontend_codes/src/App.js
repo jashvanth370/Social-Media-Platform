@@ -12,7 +12,6 @@ import Footer from './components/Footer';
 function App() {
   return (
     <Router>
-      <Navbar />
       <div className="d-flex flex-column min-vh-100">
         <main className="flex-grow-1">
         <Routes>
@@ -23,6 +22,7 @@ function App() {
           <Route path='/post-card' element={<PostCard />} />
           <Route path='/feed-page' element={<FeedPage />} />
           <Route path='/profile/:id' element={<UserProfile />} />
+          
         </Routes>
         </main>
       </div>
