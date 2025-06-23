@@ -73,7 +73,7 @@ export default function UserProfile() {
             <div className="row align-items-center">
                 <div className="col-md-4 text-center mb-3">
                     <img
-                        src={user.profilePic || '/default-profile.png'}
+                        src={`http://localhost:8080${user.profilePic}`}
                         alt="Profile"
                         className="img-fluid rounded-circle border shadow"
                         style={{ maxWidth: '250px', height: 'auto' }}

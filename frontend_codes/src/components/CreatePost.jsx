@@ -15,7 +15,7 @@ function CreatePost({ onPostCreated }) {
 
     const formData = new FormData();
     formData.append('content', content);
-    if (image) formData.append('image', image);
+    if (image) formData.append('PostImage', image);
 
     try {
       const post = await postApi.createPost(formData, userId);

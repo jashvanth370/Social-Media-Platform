@@ -8,16 +8,20 @@ function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-danger text-white text-center py-5">
-        <div className="container">
-          <h1 className="display-4 fw-bold mb-3">Connect. Share. Explore.</h1>
-          <p className="lead mb-4">Join SocialSphere — your digital space to express, connect, and engage.</p>
+      <section className="bg-danger text-white text-center">
+        <div className="container py-4">
+          <h1 className="display-4 fw-bold mb-2">Connect. Share. Explore.</h1>
+          <p className="lead mb-3">Join SocialSphere — your digital space to express, connect, and engage.</p>
           {!isAuthenticated && 
-            <Link to="/register" className="btn btn-light btn-lg me-2">Get Started</Link>
+            <Link to="/register" className="btn btn-outline-light btn-lg me-2">Get Started</Link>
           }
           {!isAuthenticated && (
-            <Link to="/login" className="btn btn-outline-light btn-lg">Login</Link>
+            <Link to="/login" className="btn btn-outline-light btn-lg me-2">Login</Link>
           )}
+          
+          <Link to="/feed-page" className="btn btn-outline-light btn-lg"> Posts</Link>
+          
+
         </div>
       </section>
 
