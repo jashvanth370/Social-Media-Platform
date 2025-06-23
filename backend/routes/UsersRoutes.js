@@ -8,9 +8,9 @@ const verifyToken = require('../middleware/authMiddleware');
 require('dotenv').config();
 
 //Register Route
-router.post('/register', async (req, res) => {
+router.post('/register', upload.single('profilePic'), async (req, res) => {
   try {
-    const { name, email, password, profilePic, bio } = req.body;
+    const { name, email, password, bio } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -20,11 +20,13 @@ router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
+    const profilePicPath = req.file ? `/uploads/${req.file.filename}` : '';
+
     const newUser = new User({
       name,
       email,
       password: passwordHash,
-      profilePic,
+      profilePic: profilePicPath,
       bio,
     });
 
@@ -48,10 +50,10 @@ router.post('/register', async (req, res) => {
     });
   } catch (err) {
     console.error('Registration Error:', err.message);
-    console.error(err);
     res.status(500).json({ error: 'Server error during registration' });
   }
 });
+
 
 //Login Route
 router.post('/login', async (req, res) => {
