@@ -4,104 +4,25 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const verifyToken = require('../middleware/authMiddleware');
+// const verifyToken = require('../middleware/authMiddleware');
+const { SingUp } = require('../controllers/AuthController');
+const { userVerification } = require('../middleware/authMiddleware');
+const { GetAllUsers, UserGetById } = require('../controllers/UserController');
 require('dotenv').config();
 
-//Register Route
-router.post('/register', upload.single('profilePic'), async (req, res) => {
-  try {
-    const { name, email, password, bio } = req.body;
-
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
-
-    const profilePicPath = req.file ? `/uploads/${req.file.filename}` : '';
-
-    const newUser = new User({
-      name,
-      email,
-      password: passwordHash,
-      profilePic: profilePicPath,
-      bio,
-    });
-
-    const savedUser = await newUser.save();
-
-    const token = jwt.sign(
-      {
-        userId: savedUser._id,
-        email: savedUser.email,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '2h' }
-    );
-
-    const { password: _, ...userData } = savedUser.toObject();
-
-    res.status(201).json({
-      token,
-      user: userData,
-      message: 'User registered successfully',
-    });
-  } catch (err) {
-    console.error('Registration Error:', err.message);
-    res.status(500).json({ error: 'Server error during registration' });
-  }
-});
-
-
-//Login Route
-router.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ message: 'Invalid email or password' });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: 'Invalid email or password' });
-
-    const token = jwt.sign(
-      {
-        userId: user._id,
-        email: user.email,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '2h' }
-    );
-
-    const { password: _, ...userData } = user.toObject();
-
-    res.status(200).json({
-      token,
-      user: userData,
-      message: 'Login successful',
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error during login' });
-  }
-});
 
 //get user 
-router.get('/me', verifyToken, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.userId).select('-password');
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ error: 'Error fetching user data' });
-  }
-});
+// router.get('/me',userVerification, async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user.userId).select('-password');
+//     res.json(user);
+//   } catch (err) {
+//     res.status(500).json({ error: 'Error fetching user data' });
+//   }
+// });
 
 //Profile pic
-router.post('/profile-pic',verifyToken,upload.single('profilePic'), async (req, res) => {
+router.post('/profile-pic',upload.single('profilePic'), async (req, res) => {
   try {
     const userId = req.body.userId; // Replace with req.user.id if using auth middleware
     const user = await User.findById(userId);
@@ -117,89 +38,70 @@ router.post('/profile-pic',verifyToken,upload.single('profilePic'), async (req, 
   }
 });
 
-//get all users
-router.get('/getAll',async(req,res)=>{
-  try{
-    const users = await User.find();
-    res.status(200).json(users);
-  }catch (err) {
-    res.status(500).json({ error: 'Error fetching users data' });
-  }
-});
 
-// GET user by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id).select('-password');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// // UPDATE user by ID
+// router.put('/:id',async (req, res) => {
+//   try {
+//     const updates = req.body;
+//     const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.status(200).json(user);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
-// UPDATE user by ID
-router.put('/:id',verifyToken,async (req, res) => {
-  try {
-    const updates = req.body;
-    const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// //FOLLOW user
+// router.put('/:id/follow',async (req, res) => {
+//   try {
+//     const targetUser = await User.findById(req.params.id);
+//     const currentUser = await User.findById(req.body.currentUserId);
 
-// FOLLOW user
-router.put('/:id/follow',verifyToken,async (req, res) => {
-  try {
-    const targetUser = await User.findById(req.params.id);
-    const currentUser = await User.findById(req.body.currentUserId);
+//     if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
 
-    if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
+//     if (targetUser.followers.includes(req.body.currentUserId)) {
+//       return res.status(400).json({ message: 'You already follow this user' });
+//     }
 
-    if (targetUser.followers.includes(req.body.currentUserId)) {
-      return res.status(400).json({ message: 'You already follow this user' });
-    }
+//     targetUser.followers.push(req.body.currentUserId);
+//     currentUser.following.push(req.params.id);
 
-    targetUser.followers.push(req.body.currentUserId);
-    currentUser.following.push(req.params.id);
+//     await targetUser.save();
+//     await currentUser.save();
 
-    await targetUser.save();
-    await currentUser.save();
+//     res.status(200).json({ message: 'User followed successfully' });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
-    res.status(200).json({ message: 'User followed successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// // UNFOLLOW user
+// router.put('/:id/unfollow',async (req, res) => {
+//   try {
+//     const targetUser = await User.findById(req.params.id);
+//     const currentUser = await User.findById(req.body.currentUserId);
 
-// UNFOLLOW user
-router.put('/:id/unfollow',verifyToken,async (req, res) => {
-  try {
-    const targetUser = await User.findById(req.params.id);
-    const currentUser = await User.findById(req.body.currentUserId);
+//     if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
 
-    if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
+//     if (!targetUser.followers.includes(req.body.currentUserId)) {
+//       return res.status(400).json({ message: 'You do not follow this user' });
+//     }
 
-    if (!targetUser.followers.includes(req.body.currentUserId)) {
-      return res.status(400).json({ message: 'You do not follow this user' });
-    }
+//     targetUser.followers.pull(req.body.currentUserId);
+//     currentUser.following.pull(req.params.id);
 
-    targetUser.followers.pull(req.body.currentUserId);
-    currentUser.following.pull(req.params.id);
+//     await targetUser.save();
+//     await currentUser.save();
 
-    await targetUser.save();
-    await currentUser.save();
+//     res.status(200).json({ message: 'User unfollowed successfully' });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
-    res.status(200).json({ message: 'User unfollowed successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+router.get('/getAllUsers',userVerification,GetAllUsers);
+router.get('/get/:id',userVerification,UserGetById);
 
 module.exports = router;
