@@ -121,21 +121,25 @@ router.post('/:id/comment', async (req, res) => {
 
 
 //Delete Post
-router.delete('/:id/delete', varifyToken, async (req, res) => {
+router.delete('/:id/delete', async (req, res) => {
     try {
-        const post = Post.findById(req.params.id);
+        const post = await Post.findById(req.params.id); // ✅ Await here
+
         if (!post) {
             return res.status(404).json({ message: "Post Not Found" });
         }
+
         if (post.author.toString() !== req.body.userId) {
             return res.status(403).json({ message: 'Unauthorized' });
         }
+
         await post.deleteOne();
         res.status(200).json({ message: "Post Deleted" });
     } catch (error) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: error.message });
     }
 });
+
 
 //GEt posts by users
 router.get('/profile/:id', async (req, res) => {

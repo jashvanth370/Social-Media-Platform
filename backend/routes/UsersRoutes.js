@@ -118,7 +118,7 @@ router.post('/profile-pic',verifyToken,upload.single('profilePic'), async (req, 
 });
 
 //get all users
-router.get('/getAll',verifyToken,async(req,res)=>{
+router.get('/getAll',async(req,res)=>{
   try{
     const users = await User.find();
     res.status(200).json(users);
