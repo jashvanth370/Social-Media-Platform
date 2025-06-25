@@ -1,6 +1,7 @@
 import { useState } from "react";
 import userApi from "../api/userApi";
 import { useNavigate } from "react-router-dom";
+import authApi from "../api/authApi";
 
 function Login() {
   const [error, setError] = useState('');
@@ -14,7 +15,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await userApi.loginUser(formData);
+      const response = await authApi.loginUser(formData);
       console.log("token : ", response.token);
       localStorage.setItem("token", response.token);
       navigate('/feed-page');

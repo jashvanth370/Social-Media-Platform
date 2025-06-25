@@ -2,20 +2,6 @@ import axios from 'axios'
 import BASE_URL from './Axios'
 
 
-const createUser = async (userData) => {
-  const response = await axios.post(`${BASE_URL}/users/register`, userData,{
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }
-    });
-  return response.data;
-}
-
-const loginUser = async (userData) => {
-  const response = await axios.post(`${BASE_URL}/users/login`, userData);
-  return response.data;
-}
-
 const logout = () => {
   localStorage.removeItem('token');
 }
@@ -26,22 +12,32 @@ const isAuthenticated = () => {
 }
 
 const userProfile = async (id) => {
-  const response = await axios.get(`${BASE_URL}/users/${id}`, {
+  const token = localStorage.getItem('token');
+  if (!token) {
+      throw new Error("No token found. User might not be authenticated.");
+    }
+  const response = await axios.get(`${BASE_URL}/users/get/${id}`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   return response.data;
 }
 
 const getAllUsers = async ()=>{
-  const response = await axios.get(`${BASE_URL}/users/getAll`);
+  const token = localStorage.getItem('token');
+  if (!token) {
+      throw new Error("No token found. User might not be authenticated.");
+    }
+  const response = await axios.get(`${BASE_URL}/users/getAllUsers`,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 }
 
 const userApi = {
-  createUser,
-  loginUser,
   userProfile,
   logout,
   isAuthenticated,

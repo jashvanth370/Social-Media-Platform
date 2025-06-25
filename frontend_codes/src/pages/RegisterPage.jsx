@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import userApi from '../api/userApi';
+import authApi from '../api/authApi';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default function RegisterPage() {
       Object.entries(formData).forEach(([key, value]) => data.append(key, value));
       if (profilePic) data.append('profilePic', profilePic);
 
-      await userApi.createUser(data);
+      await authApi.createUser(data);
       navigate('/login');
     } catch (error) {
       console.log("Error response:", error);

@@ -15,6 +15,9 @@ function PostCard({ post, onLike }) {
     e.preventDefault();
     if (commentText.trim()) {
       const res = await postApi.CommentPost(post._id, commentText);
+      if(!userId){
+        alert("You need login or register");
+      }
       console.log("Updated Post with Comment:", res.post);
       setCommentText(""); // Clear after post
       setShowCommentBox(false); // Optional: hide input after submitting
