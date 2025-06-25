@@ -4,24 +4,32 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path')
-
+const authRoutes = require('./routes/AuthRoutes')
 const userRoutes = require('./routes/UsersRoutes');
 const postRoutes = require('./routes/PostRoutes');
 const messageRoutes = require('./routes/MessageRoutes')
-const notificationRoutes = require('./routes/Notification')
-
+const notificationRoutes = require('./routes/Notification');
 const app = express();
+const cookieParser = require("cookie-parser");
 
 mongoose.set('strictQuery', false);
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true
+}));
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB error:", err));
+
+//Authroutes
+app.use('/api/auth',authRoutes);
 
 // User Routes
 app.use('/api/users', userRoutes);

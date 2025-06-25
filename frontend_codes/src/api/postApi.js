@@ -13,8 +13,10 @@ const createPost = async (postData, id) => {
 }
 
 //deleye post
-const deletePost = async (id)=>{
-    const post=await axios.delete(`${BASE_URL}/posts/delete/${id}`)
+const deletePost = async (id,userId)=>{
+    const post=await axios.delete(`${BASE_URL}/posts/${id}/delete`,{
+        data: {userId},
+    });
     return post.data;
 }
 
