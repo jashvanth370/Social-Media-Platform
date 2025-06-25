@@ -81,7 +81,7 @@ export default function UserProfile() {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        const userId = decoded.userId || decoded._id;
+        const userId = decoded.id || decoded._id;
         if (userId) {
           fetchUser(userId);
           loadPosts(userId);
@@ -128,7 +128,7 @@ export default function UserProfile() {
             <li className="nav-item"><a className="nav-link" href="#">Notifications</a></li>
             <li className="nav-item"><a className="nav-link" href="#">Explore</a></li>
             <li className="btn btn-link nav-link">
-              <button onClick={handleLogout}>Logout</button>
+              <button className="btn btn-outline-primary btn-sm me-2" onClick={handleLogout}>Logout</button>
             </li>
           </ul>
         </div>
