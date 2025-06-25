@@ -1,3 +1,4 @@
+const { userVerification } = require('../middleware/authMiddleware');
 const User = require('../models/Users')
 const {createSecretToken} = require('../utils/SecretToken')
 const bcrypt = require('bcrypt')
