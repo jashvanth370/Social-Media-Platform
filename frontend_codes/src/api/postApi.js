@@ -1,5 +1,6 @@
 import axios from 'axios';
 import BASE_URL from './Axios'
+import { jwtDecode } from 'jwt-decode';
 
 //create post
 const createPost = async (postData, id) => {
@@ -17,13 +18,27 @@ const deletePost = async (id)=>{
     return post.data;
 }
 
+//like post
 const LikePost = async (postId) => {
   const token = localStorage.getItem("token");
-  return await axios.put(`${BASE_URL}/posts/${postId}/like`, {}, {
+  const decode = jwtDecode(token);
+  const userId = decode.userId || decode._id;
+  return await axios.put(`${BASE_URL}/posts/${postId}/like`, {userId}, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   });
+}
+
+//comment post 
+const CommentPost = async (postId,text) =>{
+    const token = localStorage.getItem('token');
+    const response = await axios.post(`${BASE_URL}/posts/${postId}/comment`,{text},{
+        headers: {
+            Authorization:`Bearer ${token}`
+        }
+    });
+    return response.data;
 }
 //all posts
 const fetchPosts = async()=>{
@@ -44,6 +59,7 @@ const postApi = {
     LikePost,
     fetchPosts,
     fetchPostsByUser,
+    CommentPost,
 }
 
 export default postApi;

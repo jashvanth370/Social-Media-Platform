@@ -3,7 +3,11 @@ import BASE_URL from './Axios'
 
 
 const createUser = async (userData) => {
-  const response = await axios.post(`${BASE_URL}/users/register`, userData);
+  const response = await axios.post(`${BASE_URL}/users/register`, userData,{
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    });
   return response.data;
 }
 
@@ -30,12 +34,18 @@ const userProfile = async (id) => {
   return response.data;
 }
 
+const getAllUsers = async ()=>{
+  const response = await axios.get(`${BASE_URL}/users/getAll`);
+  return response.data;
+}
+
 const userApi = {
   createUser,
   loginUser,
   userProfile,
   logout,
-  isAuthenticated
+  isAuthenticated,
+  getAllUsers
 };
 
 export default userApi;
