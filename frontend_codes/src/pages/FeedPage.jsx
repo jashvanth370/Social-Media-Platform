@@ -3,6 +3,8 @@ import CreatePost from '../components/CreatePost';
 import PostCard from '../components/PostCard';
 import postApi from '../api/postApi';
 import userApi from '../api/userApi';
+import { Link } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 function FeedPage() {
   const [posts, setPosts] = useState([]);
@@ -21,38 +23,60 @@ function FeedPage() {
     }
   };
 
-    const fetchUser = async (id) => {
-          try {
-              const response = await userApi.userProfile(id);
-              if (response) {
-                  setUser(response);
-              } else {
-                  console.warn("No user data found");
-              }
-          } catch (error) {
-              console.error("Failed to fetch user profile:", error);
-          }
-      };
-
-      const handleFollow = async () =>{
-
+  const fetchUser = async (id) => {
+    try {
+      const response = await userApi.userProfile(id);
+      if (response) {
+        setUser(response);
+      } else {
+        console.warn("No user data found");
       }
-  
-  
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+    }
+  };
+
+  const handleFollow = async (targetUser) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const currentUserId = decoded.id || decoded._id;
+
+        if (currentUserId) {
+          console.log("user found");
+          console.log("currentuser:",currentUserId)
+          console.log("targetuser",targetUser);
+        } else {
+          console.error("User ID not found in token");
+        }
+
+        const res = await userApi.followUser(currentUserId, targetUser);
+        console.log(res.message);
+        fetchUsers();
+      } catch (error) {
+        console.error("Invalid token", error);
+      }
+    } else {
+      console.warn("No token found in localStorage");
+    }
+  }
+
+
   const fetchUsers = async () => {
-          try {
-              const res = await userApi.getAllUsers();
-              if (Array.isArray(res)) {
-                  setUsers(res);
-              } else {
-                  setUsers([]);
-                  console.warn("Invalid users response", res);
-              }
-          } catch (error) {
-              console.error("Failed to fetch users:", error);
-              setUsers([]);
-          }
-      };
+    try {
+      const res = await userApi.getAllUsers();
+      if (Array.isArray(res)) {
+        setUsers(res);
+      } else {
+        setUsers([]);
+        console.warn("Invalid users response", res);
+      }
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+      setUsers([]);
+    }
+  };
 
   useEffect(() => {
     loadPosts();
@@ -64,7 +88,7 @@ function FeedPage() {
       <div className="row">
         {/* Left Sidebar */}
         <div className="col-2 border-end vh-100 p-3 left-sidebar">
-          <h4 className="mb-4 text-primary">MySocial</h4>
+          <Link to='/'><h4 className="mb-4 text-primary">MySocial</h4></Link>
           <ul className="nav flex-column">
             <li className="nav-item"><a className="nav-link" href="/feed-page">Home</a></li>
             <li className="nav-item"><a className="nav-link" href="#">Messages</a></li>
@@ -87,21 +111,21 @@ function FeedPage() {
         </div>
 
         <div className="col-4 border-start vh-100 p-4 right-sidebar">
-                    <h6 className="mb-3">Suggested for you</h6>
-                    <div className="d-flex flex-column gap-3">
-                        {users
-                            // .filter((u) => u._id !== user._id)
-                            .map((suggestedUser) => (
-                                <div key={suggestedUser._id} className="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <strong>@{suggestedUser.name}</strong><br />
-                                        <small>{suggestedUser.bio || "Suggested user"}</small>
-                                    </div>
-                                    <button className="btn btn-sm btn-outline-primary" onClick={() => handleFollow()}>Follow</button>
-                                </div>
-                            ))}
-                    </div>
+          <h6 className="mb-3">Suggested for you</h6>
+          <div className="d-flex flex-column gap-3">
+            {users
+              // .filter((u) => u._id !== user._id)
+              .map((suggestedUser) => (
+                <div key={suggestedUser._id} className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>@{suggestedUser.name}</strong><br />
+                    <small>{suggestedUser.bio || "Suggested user"}</small>
+                  </div>
+                  <button className="btn btn-sm btn-outline-primary" onClick={() => handleFollow(suggestedUser._id)}>Follow</button>
                 </div>
+              ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -5,9 +5,9 @@ import authApi from '../api/authApi';
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
+    name:'',
     bio: ''
   });
   const [profilePic, setProfilePic] = useState(null);

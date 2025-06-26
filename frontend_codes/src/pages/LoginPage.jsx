@@ -16,6 +16,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await authApi.loginUser(formData);
+      console.log(response);
       console.log("token : ", response.token);
       localStorage.setItem("token", response.token);
       navigate('/feed-page');

@@ -31,7 +31,7 @@ function PostCard({ post, onLike }) {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        const userId = decoded.userId || decoded._id;
+        const userId = decoded.id || decoded._id;
         if (userId) {
           setUserId(userId);
         } else {
@@ -124,14 +124,14 @@ function PostCard({ post, onLike }) {
               {post.comments.map((comment, index) => (
                 <div key={index} className="mb-2 d-flex align-items-start">
                   <img
-                    src={`http://localhost:8080${comment.userId?.profilePic}`}
+                    src={`http://localhost:8080${comment.authorSnapshot?.profilePic}`}
                     alt="comment-user"
                     width="30"
                     height="30"
                     className="rounded-circle me-2"
                   />
                   <div>
-                    <strong>{comment.userId?.name}</strong>
+                    <strong>{comment.authorSnapshot?.name}</strong>
                     <p className="mb-0">{comment.text}</p>
                     <small className="text-muted">{new Date(comment.createdAt).toLocaleString()}</small>
                   </div>
