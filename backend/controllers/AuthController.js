@@ -13,7 +13,7 @@ module.exports.SingUp = async (req,res,next)=>{
       return res.json({ message: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(12);
     const passwordHash = await bcrypt.hash(password, salt);
     const profilePicPath = req.file ? `/uploads/${req.file.filename}` : '';
 
@@ -22,7 +22,8 @@ module.exports.SingUp = async (req,res,next)=>{
         password: passwordHash, 
         name, 
         profilePic: profilePicPath,
-        bio });
+        bio 
+      });
 
     const token = createSecretToken(user._id);
 
@@ -47,11 +48,11 @@ module.exports.Login = async (req, res, next) => {
     }
     const user = await User.findOne({ email });
     if(!user){
-      return res.json({message:'Incorrect password or email' }) 
+      return res.json({message:'Incorrect email' }) 
     }
     const auth = await bcrypt.compare(password,user.password)
     if (!auth) {
-      return res.json({message:'Incorrect password or email' }) 
+      return res.json({message:'Incorrect password' }) 
     }
      const token = createSecretToken(user._id);
      res.cookie("token", token, {
