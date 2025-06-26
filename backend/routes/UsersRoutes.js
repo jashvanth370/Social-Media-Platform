@@ -2,24 +2,10 @@ const User = require('../models/Users'); // Use capital "User" for models
 const upload = require('../middleware/uploads')
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-// const verifyToken = require('../middleware/authMiddleware');
-const { SingUp } = require('../controllers/AuthController');
 const { userVerification } = require('../middleware/authMiddleware');
-const { GetAllUsers, UserGetById } = require('../controllers/UserController');
+const { GetAllUsers, UserGetById, UnFollowUser, FollowUser } = require('../controllers/UserController');
 require('dotenv').config();
 
-
-//get user 
-// router.get('/me',userVerification, async (req, res) => {
-//   try {
-//     const user = await User.findById(req.user.userId).select('-password');
-//     res.json(user);
-//   } catch (err) {
-//     res.status(500).json({ error: 'Error fetching user data' });
-//   }
-// });
 
 //Profile pic
 router.post('/profile-pic',upload.single('profilePic'), async (req, res) => {
@@ -54,52 +40,10 @@ router.post('/profile-pic',upload.single('profilePic'), async (req, res) => {
 // });
 
 // //FOLLOW user
-// router.put('/:id/follow',async (req, res) => {
-//   try {
-//     const targetUser = await User.findById(req.params.id);
-//     const currentUser = await User.findById(req.body.currentUserId);
+router.put('/:id/follow',FollowUser);
 
-//     if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
-
-//     if (targetUser.followers.includes(req.body.currentUserId)) {
-//       return res.status(400).json({ message: 'You already follow this user' });
-//     }
-
-//     targetUser.followers.push(req.body.currentUserId);
-//     currentUser.following.push(req.params.id);
-
-//     await targetUser.save();
-//     await currentUser.save();
-
-//     res.status(200).json({ message: 'User followed successfully' });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
-
-// // UNFOLLOW user
-// router.put('/:id/unfollow',async (req, res) => {
-//   try {
-//     const targetUser = await User.findById(req.params.id);
-//     const currentUser = await User.findById(req.body.currentUserId);
-
-//     if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
-
-//     if (!targetUser.followers.includes(req.body.currentUserId)) {
-//       return res.status(400).json({ message: 'You do not follow this user' });
-//     }
-
-//     targetUser.followers.pull(req.body.currentUserId);
-//     currentUser.following.pull(req.params.id);
-
-//     await targetUser.save();
-//     await currentUser.save();
-
-//     res.status(200).json({ message: 'User unfollowed successfully' });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
+// UNFOLLOW user
+router.put('/:id/unfollow',userVerification,UnFollowUser);
 
 router.get('/getAllUsers',userVerification,GetAllUsers);
 router.get('/get/:id',userVerification,UserGetById);

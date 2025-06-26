@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema({
     },
     profilePic: {
         type: String,
-        required: false,
         default: ''
     },
     bio: {
@@ -43,9 +42,5 @@ const userSchema = new mongoose.Schema({
         ref: 'Post'
     }]
 }, { timestamps: true });
-
-userSchema.pre("save", async function () {
-    this.password = await bcrypt.hash(this.password, 12);
-})
 
 module.exports = mongoose.model('User', userSchema);
