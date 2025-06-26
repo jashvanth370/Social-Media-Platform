@@ -1,5 +1,6 @@
 const Post = require('../models/POst');
 const Users = require('../models/Users');
+const jwt = require('jsonwebtoken')
 
 //get all posts
 module.exports.GetAllPosts = async (req, res) => {
@@ -56,13 +57,19 @@ module.exports.CommentPost =  async (req, res) => {
         if (!token) return res.status(401).json({ message: "Unauthorized" });
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.userId || decoded._id;
+        const userId = decoded.id || decoded._id;
+        const user = await Users.findById(userId);
 
         const post = await Post.findById(req.params.id);
         if (!post) return res.status(404).json({ message: "Post not found" });
 
         const newComment = {
             userId,
+            authorSnapshot: {
+                name: user.name,
+                email: user.email,
+                profilePic: user.profilePic
+            },
             text,
             createdAt: new Date()
         };

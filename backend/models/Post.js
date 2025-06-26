@@ -7,6 +7,12 @@ const commentSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    authorSnapshot: 
+    {
+    name: String,
+    email: String,
+    profilePic: String
+    },
     text:
     {
         type: String,
