@@ -1,6 +1,8 @@
+const upload = require('../middleware/uploads');
 const Post = require('../models/POst');
 const Users = require('../models/Users');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const multer = require('multer');
 
 //get all posts
 module.exports.GetAllPosts = async (req, res) => {
@@ -30,7 +32,7 @@ module.exports.GetPostsByUser = async (req, res) => {
 }
 
 //Delete Post
-module.exports.DeletePost=  async (req, res) => {
+module.exports.DeletePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
@@ -50,7 +52,7 @@ module.exports.DeletePost=  async (req, res) => {
 }
 
 // Add comment to a post
-module.exports.CommentPost =  async (req, res) => {
+module.exports.CommentPost = async (req, res) => {
     try {
         const { text } = req.body;
         const token = req.headers.authorization?.split(" ")[1];
@@ -84,4 +86,62 @@ module.exports.CommentPost =  async (req, res) => {
     }
 }
 
+module.exports.likePost = async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const post = await Post.findById(req.params.id);
+
+        if (!post.likes.includes(userId)) {
+            post.likes.push(userId);
+            await post.save();
+            return res.status(200).json({ message: 'Post liked', post: post });
+        } else {
+            post.likes.pull(userId);
+            await post.save();
+            return res.status(200).json({ message: 'Post unliked', post: post });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+module.exports.createPost = upload.single('PostImage'), async (req, res) => {
+    try {
+        const { content } = req.body;
+        const userId = req.body;
+        const user = await Users.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (!content) {
+            return res.status(400).json({ message: "Content field is required" });
+        }
+
+        const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
+
+        const newPost = new Post({
+            author: user._id,
+            authorSnapshot: {
+                name: user.name,
+                email: user.email,
+                profilePic: user.profilePic
+            },
+            content,
+            image: imagePath, // store uploaded file path
+        });
+
+        const savedPost = await newPost.save();
+        user.post.push(savedPost._id);
+        await user.save();
+
+        const populatedPost = await Post.findById(savedPost._id).populate('author', 'name email profilePic');
+
+        res.status(201).json({ message: "Post created", post: populatedPost });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to create post' });
+    }
+}
 

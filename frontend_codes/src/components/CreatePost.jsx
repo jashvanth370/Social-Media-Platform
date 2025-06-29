@@ -29,8 +29,7 @@ function CreatePost({ onPostCreated }) {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log("token", token);
+    const token = localStorage.getItem("token"); 
     if (token) {
       try {
         const decoded = jwtDecode(token);

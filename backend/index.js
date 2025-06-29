@@ -17,7 +17,7 @@ mongoose.set('strictQuery', false);
 // Middleware
 app.use(cors({
   origin: ["http://localhost:3000"],
-  methods: ["GET","POST","PUT","DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 app.use(cookieParser());
@@ -29,22 +29,22 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.error("MongoDB error:", err));
 
 //Authroutes
-app.use('/api/auth',authRoutes);
+app.use('/api/auth', authRoutes);
 
 // User Routes
 app.use('/api/users', userRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // POst routes
-app.use('/api/posts',postRoutes);
+app.use('/api/posts', postRoutes);
 
 //message routes
-app.use('/api/message',messageRoutes);
+app.use('/api/message', messageRoutes);
 
 //notification routes
-app.use('/api/notification',notificationRoutes);
+app.use('/api/notification', notificationRoutes);
 
-const PORT = process.env.PORT || 8080;
+const PORT = 8081;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
