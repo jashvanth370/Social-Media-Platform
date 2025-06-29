@@ -148,6 +148,8 @@ export default function UserProfile() {
               <h2 className="fw-bold">{user.name}</h2>
               <p><strong>Email:</strong> {user.email}</p>
               {user.bio && <p><strong>Bio:</strong> {user.bio}</p>}
+              <p><strong>Followers:</strong> {user.followers.length}</p>
+              <p><strong>Following:</strong> {user.following.length}</p>
             </div>
           </div>
 
