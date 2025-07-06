@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import authApi from "../api/authApi";
 
 function Login() {
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -13,16 +14,17 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
     try {
       const response = await authApi.loginUser(formData);
-      console.log(response);
-      console.log("token : ", response.token);
       localStorage.setItem("token", response.token);
       navigate('/feed-page');
-      console.log("User Login Successfully ");
     } catch (error) {
-      console.log("Error response:", error);
-      setError(error.response?.data?.message);
+      setError(error.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -31,57 +33,99 @@ function Login() {
   };
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: "100vh", backgroundColor: "#fafafa" }}
-    >
-      <div
-        className="card p-4"
-        style={{ width: "350px", border: "1px solid #dbdbdb", borderRadius: "8px" }}
-      >
-        <h2
-          className="text-center mb-4"
-          style={{ fontFamily: "'Grand Hotel', cursive", fontSize: "40px", color: "#262626" }}
-        >
-          MySocial
-        </h2>
+    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-md-6 col-lg-4">
+            <div className="card shadow-lg border-0">
+              <div className="card-body p-5">
+                <div className="text-center mb-4">
+                  <h2 className="fw-bold text-primary mb-2">
+                    <i className="bi bi-globe me-2"></i>
+                    SocialSphere
+                  </h2>
+                  <p className="text-muted">Welcome back! Please sign in to your account.</p>
+                </div>
 
-        {error && <div className="alert alert-danger">{error}</div>}
+                {error && (
+                  <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i className="bi bi-exclamation-triangle me-2"></i>
+                    {error}
+                    <button type="button" className="btn-close" onClick={() => setError('')}></button>
+                  </div>
+                )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <input
-              type="email"
-              name="email"
-              className="form-control"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              autoComplete="username"
-            />
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label fw-semibold">Email address</label>
+                    <div className="input-group">
+                      <span className="input-group-text">
+                        <i className="bi bi-envelope"></i>
+                      </span>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        className="form-control"
+                        placeholder="Enter your email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        autoComplete="email"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <label htmlFor="password" className="form-label fw-semibold">Password</label>
+                    <div className="input-group">
+                      <span className="input-group-text">
+                        <i className="bi bi-lock"></i>
+                      </span>
+                      <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        className="form-control"
+                        placeholder="Enter your password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        autoComplete="current-password"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary w-100 py-2 fw-semibold"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                        Signing in...
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-box-arrow-in-right me-2"></i>
+                        Sign In
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                <div className="text-center mt-4">
+                  <p className="mb-0 text-muted">
+                    Don't have an account?
+                    <Link to="/register" className="text-primary text-decoration-none ms-1 fw-semibold">
+                      Sign up here
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div className="mb-3">
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              autoComplete="current-password"
-            />
-          </div>
-
-          <button type="submit" className="btn btn-primary w-100 fw-bold">
-            Log In
-          </button>
-        </form>
-
-        <div className="mt-4 text-center" style={{ fontSize: "14px" }}>
-          Don't have an account? <a href="/register">Sign up</a>
         </div>
       </div>
     </div>
