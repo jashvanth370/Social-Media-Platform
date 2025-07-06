@@ -1,3 +1,5 @@
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css');
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +7,1222 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Custom gradient background */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Custom shadows */
+.shadow-custom {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Smooth transitions */
+.btn,
+.card,
+.nav-link {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover effects */
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Loading animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom form styles */
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Custom button styles */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+/* Profile image styles */
+.profile-image {
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Post card styles */
+.post-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Sidebar styles */
+.sidebar {
+  background: linear-gradient(180deg, #fff 0%, #f8f9fa 100%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Custom alert styles */
+.alert {
+  border-radius: 8px;
+  border: none;
+}
+
+/* Custom modal styles */
+.modal-content {
+  border-radius: 12px;
+  border: none;
+}
+
+/* Custom dropdown styles */
+.dropdown-menu {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Custom navbar styles */
+.navbar {
+  backdrop-filter: blur(10px);
+  background-color: rgba(13, 110, 253, 0.95) !important;
+}
+
+/* Custom footer styles */
+footer {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+/* Custom text selection */
+::selection {
+  background-color: #667eea;
+  color: white;
+}
+
+/* Custom focus styles for accessibility */
+.btn:focus,
+.form-control:focus,
+.nav-link:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Custom loading spinner */
+.spinner-custom {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Custom badge styles */
+.badge {
+  font-weight: 500;
+}
+
+/* Custom tooltip styles */
+.tooltip {
+  font-size: 0.875rem;
+}
+
+/* Custom popover styles */
+.popover {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Custom progress bar styles */
+.progress {
+  border-radius: 8px;
+  height: 8px;
+}
+
+/* Custom breadcrumb styles */
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  content: "›";
+  color: #6c757d;
+}
+
+/* Custom pagination styles */
+.page-link {
+  border-radius: 6px;
+  margin: 0 2px;
+  border: none;
+}
+
+.page-item.active .page-link {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+/* Custom list group styles */
+.list-group-item {
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 4px;
+}
+
+/* Custom table styles */
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table th {
+  border-top: none;
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+/* Custom card header styles */
+.card-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dee2e6;
+  font-weight: 600;
+}
+
+/* Custom input group styles */
+.input-group-text {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #ced4da;
+}
+
+/* Custom nav tabs styles */
+.nav-tabs .nav-link {
+  border-radius: 8px 8px 0 0;
+  border: none;
+  margin-right: 4px;
+}
+
+.nav-tabs .nav-link.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+/* Custom accordion styles */
+.accordion-button {
+  border-radius: 8px;
+  border: none;
+}
+
+.accordion-button:not(.collapsed) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+/* Custom offcanvas styles */
+.offcanvas {
+  border-radius: 12px 0 0 12px;
+}
+
+/* Custom toast styles */
+.toast {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Custom carousel styles */
+.carousel-item {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Custom figure styles */
+.figure {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Custom blockquote styles */
+.blockquote {
+  border-left: 4px solid #667eea;
+  padding-left: 1rem;
+}
+
+/* Custom code styles */
+code {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+}
+
+/* Custom pre styles */
+pre {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+/* Custom mark styles */
+mark {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+/* Custom small styles */
+small {
+  font-size: 0.875em;
+  color: #6c757d;
+}
+
+/* Custom abbr styles */
+abbr[title] {
+  text-decoration: none;
+  border-bottom: 1px dotted #6c757d;
+}
+
+/* Custom kbd styles */
+kbd {
+  background-color: #212529;
+  color: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+}
+
+/* Custom samp styles */
+samp {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* Custom var styles */
+var {
+  font-style: italic;
+  color: #6c757d;
+}
+
+/* Custom time styles */
+time {
+  color: #6c757d;
+  font-size: 0.875em;
+}
+
+/* Custom data styles */
+data {
+  color: #6c757d;
+  font-size: 0.875em;
+}
+
+/* Custom output styles */
+output {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* Custom meter styles */
+meter {
+  border-radius: 4px;
+}
+
+/* Custom progress styles */
+progress {
+  border-radius: 4px;
+}
+
+/* Custom details styles */
+details {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #495057;
+}
+
+details summary:hover {
+  color: #667eea;
+}
+
+/* Custom dialog styles */
+dialog {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Custom menu styles */
+menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Custom menuitem styles */
+menuitem {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #495057;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+menuitem:hover {
+  background-color: #f8f9fa;
+  color: #667eea;
+}
+
+/* Custom command styles */
+command {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.875em;
+}
+
+/* Custom keygen styles */
+keygen {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 0.375rem 0.75rem;
+}
+
+/* Custom xmp styles */
+xmp {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+/* Custom plaintext styles */
+plaintext {
+  font-family: monospace;
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+/* Custom listing styles */
+listing {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+/* Custom nobr styles */
+nobr {
+  white-space: nowrap;
+}
+
+/* Custom wbr styles */
+wbr {
+  word-break: break-word;
+}
+
+/* Custom basefont styles */
+basefont {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Custom font styles */
+font {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Custom center styles */
+center {
+  text-align: center;
+}
+
+/* Custom big styles */
+big {
+  font-size: 1.25em;
+}
+
+/* Custom blink styles */
+blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Custom marquee styles */
+marquee {
+  background-color: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+/* Custom multicol styles */
+multicol {
+  column-count: 2;
+  column-gap: 2rem;
+}
+
+/* Custom spacer styles */
+spacer {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+
+/* Custom tt styles */
+tt {
+  font-family: monospace;
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+/* Custom strike styles */
+strike {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+/* Custom u styles */
+u {
+  text-decoration: underline;
+  text-decoration-color: #667eea;
+  text-decoration-thickness: 2px;
+}
+
+/* Custom s styles */
+s {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+/* Custom bdo styles */
+bdo {
+  direction: rtl;
+}
+
+/* Custom bdi styles */
+bdi {
+  direction: ltr;
+}
+
+/* Custom ruby styles */
+ruby {
+  ruby-position: under;
+}
+
+/* Custom rt styles */
+rt {
+  font-size: 0.75em;
+  color: #6c757d;
+}
+
+/* Custom rp styles */
+rp {
+  display: none;
+}
+
+/* Custom rb styles */
+rb {
+  font-weight: 600;
+}
+
+/* Custom rtc styles */
+rtc {
+  font-size: 0.75em;
+  color: #6c757d;
+}
+
+/* Custom rbc styles */
+rbc {
+  font-weight: 600;
+}
+
+/* Custom rtc styles */
+rtc {
+  font-size: 0.75em;
+  color: #6c757d;
+}
+
+/* Custom rp styles */
+rp {
+  display: none;
+}
+
+/* Custom rt styles */
+rt {
+  font-size: 0.75em;
+  color: #6c757d;
+}
+
+/* Custom ruby styles */
+ruby {
+  ruby-position: under;
+}
+
+/* Custom bdi styles */
+bdi {
+  direction: ltr;
+}
+
+/* Custom bdo styles */
+bdo {
+  direction: rtl;
+}
+
+/* Custom s styles */
+s {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+/* Custom u styles */
+u {
+  text-decoration: underline;
+  text-decoration-color: #667eea;
+  text-decoration-thickness: 2px;
+}
+
+/* Custom strike styles */
+strike {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+/* Custom tt styles */
+tt {
+  font-family: monospace;
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+/* Custom spacer styles */
+spacer {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+
+/* Custom multicol styles */
+multicol {
+  column-count: 2;
+  column-gap: 2rem;
+}
+
+/* Custom marquee styles */
+marquee {
+  background-color: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+/* Custom blink styles */
+blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Custom big styles */
+big {
+  font-size: 1.25em;
+}
+
+/* Custom center styles */
+center {
+  text-align: center;
+}
+
+/* Custom font styles */
+font {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Custom basefont styles */
+basefont {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Custom wbr styles */
+wbr {
+  word-break: break-word;
+}
+
+/* Custom nobr styles */
+nobr {
+  white-space: nowrap;
+}
+
+/* Custom listing styles */
+listing {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+/* Custom plaintext styles */
+plaintext {
+  font-family: monospace;
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+/* Custom xmp styles */
+xmp {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+/* Custom keygen styles */
+keygen {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 0.375rem 0.75rem;
+}
+
+/* Custom command styles */
+command {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.875em;
+}
+
+/* Custom menuitem styles */
+menuitem {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #495057;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+menuitem:hover {
+  background-color: #f8f9fa;
+  color: #667eea;
+}
+
+/* Custom menu styles */
+menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Custom dialog styles */
+dialog {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Custom details styles */
+details {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #495057;
+}
+
+details summary:hover {
+  color: #667eea;
+}
+
+/* Custom progress styles */
+progress {
+  border-radius: 4px;
+}
+
+/* Custom meter styles */
+meter {
+  border-radius: 4px;
+}
+
+/* Custom output styles */
+output {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* Custom data styles */
+data {
+  color: #6c757d;
+  font-size: 0.875em;
+}
+
+/* Custom time styles */
+time {
+  color: #6c757d;
+  font-size: 0.875em;
+}
+
+/* Custom var styles */
+var {
+  font-style: italic;
+  color: #6c757d;
+}
+
+/* Custom samp styles */
+samp {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* Custom kbd styles */
+kbd {
+  background-color: #212529;
+  color: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+}
+
+/* Custom abbr styles */
+abbr[title] {
+  text-decoration: none;
+  border-bottom: 1px dotted #6c757d;
+}
+
+/* Custom small styles */
+small {
+  font-size: 0.875em;
+  color: #6c757d;
+}
+
+/* Custom mark styles */
+mark {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+/* Custom pre styles */
+pre {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+/* Custom code styles */
+code {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+}
+
+/* Custom blockquote styles */
+.blockquote {
+  border-left: 4px solid #667eea;
+  padding-left: 1rem;
+}
+
+/* Custom figure styles */
+.figure {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Custom carousel styles */
+.carousel-item {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Custom toast styles */
+.toast {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Custom offcanvas styles */
+.offcanvas {
+  border-radius: 12px 0 0 12px;
+}
+
+/* Custom accordion styles */
+.accordion-button {
+  border-radius: 8px;
+  border: none;
+}
+
+.accordion-button:not(.collapsed) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+/* Custom nav tabs styles */
+.nav-tabs .nav-link {
+  border-radius: 8px 8px 0 0;
+  border: none;
+  margin-right: 4px;
+}
+
+.nav-tabs .nav-link.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+/* Custom input group styles */
+.input-group-text {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #ced4da;
+}
+
+/* Custom card header styles */
+.card-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dee2e6;
+  font-weight: 600;
+}
+
+/* Custom table styles */
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table th {
+  border-top: none;
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+/* Custom list group styles */
+.list-group-item {
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 4px;
+}
+
+/* Custom pagination styles */
+.page-link {
+  border-radius: 6px;
+  margin: 0 2px;
+  border: none;
+}
+
+.page-item.active .page-link {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+/* Custom breadcrumb styles */
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  content: "›";
+  color: #6c757d;
+}
+
+/* Custom progress bar styles */
+.progress {
+  border-radius: 8px;
+  height: 8px;
+}
+
+/* Custom popover styles */
+.popover {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Custom tooltip styles */
+.tooltip {
+  font-size: 0.875rem;
+}
+
+/* Custom badge styles */
+.badge {
+  font-weight: 500;
+}
+
+/* Custom loading spinner */
+.spinner-custom {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Custom focus styles for accessibility */
+.btn:focus,
+.form-control:focus,
+.nav-link:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Custom text selection */
+::selection {
+  background-color: #667eea;
+  color: white;
+}
+
+/* Custom footer styles */
+footer {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+/* Custom navbar styles */
+.navbar {
+  backdrop-filter: blur(10px);
+  background-color: rgba(13, 110, 253, 0.95) !important;
+}
+
+/* Custom dropdown styles */
+.dropdown-menu {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Custom modal styles */
+.modal-content {
+  border-radius: 12px;
+  border: none;
+}
+
+/* Custom alert styles */
+.alert {
+  border-radius: 8px;
+  border: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Sidebar styles */
+.sidebar {
+  background: linear-gradient(180deg, #fff 0%, #f8f9fa 100%);
+}
+
+/* Post card styles */
+.post-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Profile image styles */
+.profile-image {
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Custom button styles */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+/* Custom form styles */
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Loading animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Hover effects */
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Smooth transitions */
+.btn,
+.card,
+.nav-link {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Custom shadows */
+.shadow-custom {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Custom gradient background */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
