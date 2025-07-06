@@ -3,15 +3,16 @@ import CreatePost from '../components/CreatePost';
 import PostCard from '../components/PostCard';
 import postApi from '../api/postApi';
 import userApi from '../api/userApi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
 function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
-  const [user, setUser] = useState();
-
-
+  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUserProfile, setCurrentUserProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const loadPosts = async () => {
     try {
@@ -23,19 +24,6 @@ function FeedPage() {
     }
   };
 
-  const fetchUser = async (id) => {
-    try {
-      const response = await userApi.userProfile(id);
-      if (response) {
-        setUser(response);
-      } else {
-        console.warn("No user data found");
-      }
-    } catch (error) {
-      console.error("Failed to fetch user profile:", error);
-    }
-  };
-
   const handleFollow = async (targetUser) => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -44,24 +32,18 @@ function FeedPage() {
         const currentUserId = decoded.id || decoded._id;
 
         if (currentUserId) {
-          console.log("user found");
-          console.log("currentuser:",currentUserId)
-          console.log("targetuser",targetUser);
+          await userApi.followUser(targetUser, currentUserId);
+          fetchUsers();
         } else {
           console.error("User ID not found in token");
         }
-
-        const res = await userApi.followUser(currentUserId, targetUser);
-        console.log(res.message);
-        fetchUsers();
       } catch (error) {
-        console.error("Invalid token", error);
+        console.error("Follow error:", error);
       }
     } else {
       console.warn("No token found in localStorage");
     }
   }
-
 
   const fetchUsers = async () => {
     try {
@@ -79,49 +61,154 @@ function FeedPage() {
   };
 
   useEffect(() => {
-    loadPosts();
-    fetchUsers();
-  }, []);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    const initializeFeed = async () => {
+      setLoading(true);
+      try {
+        const decoded = jwtDecode(token);
+        setCurrentUser(decoded);
+
+        // Fetch current user profile
+        const userId = decoded.id || decoded._id;
+        const userProfile = await userApi.userProfile(userId);
+        setCurrentUserProfile(userProfile);
+
+        await Promise.all([loadPosts(), fetchUsers()]);
+      } catch (error) {
+        console.error("Failed to initialize feed:", error);
+        localStorage.removeItem('token');
+        navigate('/login');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeFeed();
+  }, [navigate]);
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container-fluid feed-wrapper">
+    <div className="container-fluid bg-light">
       <div className="row">
         {/* Left Sidebar */}
-        <div className="col-2 border-end vh-100 p-3 left-sidebar">
-          <Link to='/'><h4 className="mb-4 text-primary">MySocial</h4></Link>
+        <div className="col-lg-3 col-md-4 border-end bg-white vh-100 p-4">
+          <div className="mb-4">
+            <Link to='/' className="text-decoration-none">
+              <h4 className="text-primary fw-bold">
+                <i className="bi bi-globe me-2"></i>
+                SocialSphere
+              </h4>
+            </Link>
+          </div>
+
+          <div className="mb-4">
+            <div className="d-flex align-items-center mb-3">
+              {currentUserProfile?.profilePic ? (
+                <img
+                  src={`http://localhost:8081${currentUserProfile.profilePic}`}
+                  alt="Profile"
+                  className="rounded-circle me-3"
+                  style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                />
+              ) : (
+                <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '40px', height: '40px' }}>
+                  <span className="text-white fw-bold">{currentUserProfile?.name?.charAt(0) || currentUser?.name?.charAt(0) || 'U'}</span>
+                </div>
+              )}
+              <div>
+                <h6 className="mb-0 fw-bold">{currentUserProfile?.name || currentUser?.name || 'User'}</h6>
+                <small className="text-muted">@{currentUserProfile?.name?.toLowerCase() || currentUser?.name?.toLowerCase() || 'user'}</small>
+              </div>
+            </div>
+          </div>
+
           <ul className="nav flex-column">
-            <li className="nav-item"><a className="nav-link" href="/feed-page">Home</a></li>
-            <li className="nav-item"><a className="nav-link" href="#">Messages</a></li>
-            <li className="nav-item"><a className="nav-link" href="/profile/:id">Profile</a></li>
-            <li className="nav-item"><a className="nav-link" href="#">Notifications</a></li>
-            <li className="nav-item"><a className="nav-link" href="#">Explore</a></li>
+            <li className="nav-item mb-2">
+              <Link className="nav-link active bg-light rounded" to="/feed-page">
+                <i className="bi bi-house me-2"></i>Home
+              </Link>
+            </li>
+            <li className="nav-item mb-2">
+              <Link className="nav-link text-muted" to={`/profile/${currentUser?.id || currentUser?._id}`}>
+                <i className="bi bi-person me-2"></i>Profile
+              </Link>
+            </li>
+            <li className="nav-item mb-2">
+              <a className="nav-link text-muted" href="#">
+                <i className="bi bi-chat me-2"></i>Messages
+              </a>
+            </li>
+            <li className="nav-item mb-2">
+              <a className="nav-link text-muted" href="#">
+                <i className="bi bi-bell me-2"></i>Notifications
+              </a>
+            </li>
+            <li className="nav-item mb-2">
+              <a className="nav-link text-muted" href="#">
+                <i className="bi bi-search me-2"></i>Explore
+              </a>
+            </li>
           </ul>
         </div>
 
         {/* Center Feed */}
-        <div className="col-6 feed-center py-3 px-4" style={{ maxHeight: '100vh', overflowY: 'scroll' }}>
-          <CreatePost onPostCreated={loadPosts} />
-          {posts.length === 0 ? (
-            <p className="text-center mt-3">No posts yet.</p>
-          ) : (
-            posts.map((post) => (
-              <PostCard key={post._id} post={post} onLike={loadPosts} />
-            ))
-          )}
+        <div className="col-lg-6 col-md-8 py-4">
+          <div className="row justify-content-center">
+            <div className="col-lg-8">
+              <CreatePost onPostCreated={loadPosts} />
+              {posts.length === 0 ? (
+                <div className="text-center py-5">
+                  <i className="bi bi-emoji-smile display-1 text-muted mb-3"></i>
+                  <h5 className="text-muted">No posts yet</h5>
+                  <p className="text-muted">Be the first to share something amazing!</p>
+                </div>
+              ) : (
+                posts.map((post) => (
+                  <PostCard key={post._id} post={post} onLike={loadPosts} />
+                ))
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className="col-4 border-start vh-100 p-4 right-sidebar">
-          <h6 className="mb-3">Suggested for you</h6>
+        {/* Right Sidebar */}
+        <div className="col-lg-3 d-none d-lg-block border-start bg-white vh-100 p-4">
+          <h6 className="fw-bold mb-4">Suggested for you</h6>
           <div className="d-flex flex-column gap-3">
             {users
-              // .filter((u) => u._id !== user._id)
+              .filter((u) => u._id !== currentUser?.id && u._id !== currentUser?._id)
+              .slice(0, 5)
               .map((suggestedUser) => (
-                <div key={suggestedUser._id} className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <strong>@{suggestedUser.name}</strong><br />
-                    <small>{suggestedUser.bio || "Suggested user"}</small>
+                <div key={suggestedUser._id} className="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-secondary rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '35px', height: '35px' }}>
+                      <span className="text-white fw-bold small">{suggestedUser.name?.charAt(0) || 'U'}</span>
+                    </div>
+                    <div>
+                      <strong className="d-block">@{suggestedUser.name}</strong>
+                      <small className="text-muted">{suggestedUser.bio || "New user"}</small>
+                    </div>
                   </div>
-                  <button className="btn btn-sm btn-outline-primary" onClick={() => handleFollow(suggestedUser._id)}>Follow</button>
+                  <button
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => handleFollow(suggestedUser._id)}
+                  >
+                    Follow
+                  </button>
                 </div>
               ))}
           </div>

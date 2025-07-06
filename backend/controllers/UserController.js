@@ -41,11 +41,11 @@ module.exports.UserGetById = async (req, res) => {
 // });
 
 // //get all users
-module.exports.GetAllUsers = async(req,res)=>{
-  try{
+module.exports.GetAllUsers = async (req, res) => {
+  try {
     const users = await User.find();
     res.status(200).json(users);
-  }catch (err) {
+  } catch (err) {
     res.status(500).json({ error: 'Error fetching users data' });
   }
 }
@@ -67,23 +67,40 @@ module.exports.GetAllUsers = async(req,res)=>{
 // FOLLOW user
 module.exports.FollowUser = async (req, res) => {
   try {
-    const targetUser = await User.findById(req.params.id);
-    const currentUser = await User.findById(req.body.currentUserId);
+    const { currentUserId } = req.body;
+    const targetUserId = req.params.id;
 
-    if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
+    // Prevent self-following
+    if (currentUserId === targetUserId) {
+      return res.status(400).json({ message: 'You cannot follow yourself' });
+    }
 
-    if (targetUser.followers.includes(req.body.currentUserId)) {
+    const targetUser = await User.findById(targetUserId);
+    const currentUser = await User.findById(currentUserId);
+
+    if (!targetUser || !currentUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if already following
+    if (targetUser.followers.includes(currentUserId)) {
       return res.status(400).json({ message: 'You already follow this user' });
     }
 
-    targetUser.followers.push(req.body.currentUserId);
-    currentUser.following.push(req.params.id);
+    // Add to followers/following
+    targetUser.followers.push(currentUserId);
+    currentUser.following.push(targetUserId);
 
     await targetUser.save();
     await currentUser.save();
 
-    res.status(200).json({ message: 'User followed successfully' });
+    res.status(200).json({
+      message: 'User followed successfully',
+      followersCount: targetUser.followers.length,
+      followingCount: currentUser.following.length
+    });
   } catch (err) {
+    console.error('Follow error:', err);
     res.status(500).json({ error: err.message });
   }
 }
@@ -91,23 +108,35 @@ module.exports.FollowUser = async (req, res) => {
 // UNFOLLOW user
 module.exports.UnFollowUser = async (req, res) => {
   try {
-    const targetUser = await User.findById(req.params.id);
-    const currentUser = await User.findById(req.body.currentUserId);
+    const { currentUserId } = req.body;
+    const targetUserId = req.params.id;
 
-    if (!targetUser || !currentUser) return res.status(404).json({ message: 'User not found' });
+    const targetUser = await User.findById(targetUserId);
+    const currentUser = await User.findById(currentUserId);
 
-    if (!targetUser.followers.includes(req.body.currentUserId)) {
+    if (!targetUser || !currentUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if not following
+    if (!targetUser.followers.includes(currentUserId)) {
       return res.status(400).json({ message: 'You do not follow this user' });
     }
 
-    targetUser.followers.pull(req.body.currentUserId);
-    currentUser.following.pull(req.params.id);
+    // Remove from followers/following
+    targetUser.followers.pull(currentUserId);
+    currentUser.following.pull(targetUserId);
 
     await targetUser.save();
     await currentUser.save();
 
-    res.status(200).json({ message: 'User unfollowed successfully' });
+    res.status(200).json({
+      message: 'User unfollowed successfully',
+      followersCount: targetUser.followers.length,
+      followingCount: currentUser.following.length
+    });
   } catch (err) {
+    console.error('Unfollow error:', err);
     res.status(500).json({ error: err.message });
   }
 }
