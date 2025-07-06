@@ -44,7 +44,7 @@ app.use('/api/message', messageRoutes);
 //notification routes
 app.use('/api/notification', notificationRoutes);
 
-const PORT = 8081;
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

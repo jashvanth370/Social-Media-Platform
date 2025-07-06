@@ -8,7 +8,7 @@ require('dotenv').config();
 
 
 //Profile pic
-router.post('/profile-pic',upload.single('profilePic'), async (req, res) => {
+router.post('/profile-pic', upload.single('profilePic'), async (req, res) => {
   try {
     const userId = req.body.userId; // Replace with req.user.id if using auth middleware
     const user = await User.findById(userId);
@@ -39,13 +39,13 @@ router.post('/profile-pic',upload.single('profilePic'), async (req, res) => {
 //   }
 // });
 
-// //FOLLOW user
-router.put('/:id/follow',FollowUser);
+// FOLLOW user
+router.put('/:id/follow', FollowUser);
 
 // UNFOLLOW user
-router.put('/:id/unfollow',userVerification,UnFollowUser);
+router.put('/:id/unfollow', userVerification, UnFollowUser);
 
-router.get('/getAllUsers',userVerification,GetAllUsers);
-router.get('/get/:id',userVerification,UserGetById);
+router.get('/getAllUsers', userVerification, GetAllUsers);
+router.get('/get/:id', userVerification, UserGetById);
 
 module.exports = router;
