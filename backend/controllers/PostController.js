@@ -114,10 +114,16 @@ module.exports.likePost = async (req, res) => {
     }
 }
 
-module.exports.createPost = upload.single('PostImage'), async (req, res) => {
+module.exports.createPost = async (req, res) => {
     try {
         const { content } = req.body;
-        const userId = req.body;
+
+        // Get user from JWT token
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id || decoded._id;
         const user = await Users.findById(userId);
 
         if (!user) {
@@ -149,7 +155,7 @@ module.exports.createPost = upload.single('PostImage'), async (req, res) => {
 
         res.status(201).json({ message: "Post created", post: populatedPost });
     } catch (err) {
-        console.error(err);
+        console.error('Create post error:', err);
         res.status(500).json({ message: 'Failed to create post' });
     }
 }
