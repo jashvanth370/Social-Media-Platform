@@ -66,6 +66,23 @@ export default function UserProfile() {
     }
   };
 
+  const handleSuggestedUserFollow = async (suggestedUserId) => {
+    if (!currentUser) {
+      alert("Please login to follow users");
+      return;
+    }
+
+    try {
+      await userApi.followUser(suggestedUserId, currentUser._id);
+      // Refresh users list to update follow status
+      await fetchUsers();
+      alert("Successfully followed user!");
+    } catch (error) {
+      console.error("Failed to follow suggested user:", error);
+      alert("Failed to follow user. Please try again.");
+    }
+  };
+
   const loadPosts = useCallback(async (userId) => {
     try {
       const response = await postApi.fetchPostsByUser(userId);
@@ -207,7 +224,7 @@ export default function UserProfile() {
                             className={`btn ${isFollowing ? 'btn-secondary' : 'btn-primary'}`}
                             onClick={handleFollowToggle}
                           >
-                            {isFollowing ? 'Following' : 'Follow'}
+                            {isFollowing ? 'Followed' : 'Follow'}
                           </button>
                         )}
                       </div>
@@ -300,7 +317,7 @@ export default function UserProfile() {
                   </div>
                   <button
                     className="btn btn-sm btn-outline-primary"
-                    onClick={() => alert("Follow feature coming soon!")}
+                    onClick={() => handleSuggestedUserFollow(suggestedUser._id)}
                   >
                     Follow
                   </button>
