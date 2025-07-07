@@ -14,8 +14,8 @@ const isAuthenticated = () => {
 const userProfile = async (id) => {
   const token = localStorage.getItem('token');
   if (!token) {
-      throw new Error("No token found. User might not be authenticated.");
-    }
+    throw new Error("No token found. User might not be authenticated.");
+  }
   const response = await axios.get(`${BASE_URL}/users/get/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -24,12 +24,12 @@ const userProfile = async (id) => {
   return response.data;
 }
 
-const getAllUsers = async ()=>{
+const getAllUsers = async () => {
   const token = localStorage.getItem('token');
   if (!token) {
-      throw new Error("No token found. User might not be authenticated.");
-    }
-  const response = await axios.get(`${BASE_URL}/users/getAllUsers`,{
+    throw new Error("No token found. User might not be authenticated.");
+  }
+  const response = await axios.get(`${BASE_URL}/users/getAllUsers`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -37,14 +37,30 @@ const getAllUsers = async ()=>{
   return response.data;
 }
 
-const followUser = async (targetUser,currentUserId)=>{
+const followUser = async (targetUser, currentUserId) => {
   const token = localStorage.getItem('token');
   if (!token) {
-      throw new Error("No token found. User might not be authenticated.");
-    }
-  const response = await axios.put(`${BASE_URL}/users/${targetUser}/follow`,{
-    currentUserId}
-  ,{
+    throw new Error("No token found. User might not be authenticated.");
+  }
+  const response = await axios.put(`${BASE_URL}/users/${targetUser}/follow`, {
+    currentUserId
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
+
+const unfollowUser = async (targetUser, currentUserId) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error("No token found. User might not be authenticated.");
+  }
+  const response = await axios.put(`${BASE_URL}/users/${targetUser}/unfollow`, {
+    currentUserId
+  }, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -58,7 +74,8 @@ const userApi = {
   logout,
   isAuthenticated,
   getAllUsers,
-  followUser
+  followUser,
+  unfollowUser
 };
 
 export default userApi;

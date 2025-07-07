@@ -4,52 +4,52 @@ import { jwtDecode } from 'jwt-decode';
 
 //create post
 const createPost = async (postData, id) => {
-    const post = await axios.post(`${BASE_URL}/posts/create/${id}`, postData, {
+    const token = localStorage.getItem("token");
+    const post = await axios.post(`${BASE_URL}/posts/createPost`, postData, {
         headers: {
             'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`
         },
     });
     return post.data;
 }
 
 //deleye post
-const deletePost = async (id,userId)=>{
-    const post=await axios.delete(`${BASE_URL}/posts/${id}/delete`,{
-        data: {userId},
+const deletePost = async (id, userId) => {
+    const post = await axios.delete(`${BASE_URL}/posts/${id}/delete`, {
+        data: { userId },
     });
     return post.data;
 }
 
 //like post
 const LikePost = async (postId) => {
-  const token = localStorage.getItem("token");
-  const decode = jwtDecode(token);
-  const userId = decode.userId || decode._id;
-  return await axios.put(`${BASE_URL}/posts/${postId}/like`, {userId}, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+    const token = localStorage.getItem("token");
+    return await axios.put(`${BASE_URL}/posts/${postId}/like`, {}, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
 }
 
 //comment post 
-const CommentPost = async (postId,text) =>{
+const CommentPost = async (postId, text) => {
     const token = localStorage.getItem('token');
-    const response = await axios.post(`${BASE_URL}/posts/${postId}/comment`,{text},{
+    const response = await axios.post(`${BASE_URL}/posts/${postId}/comment`, { text }, {
         headers: {
-            Authorization:`Bearer ${token}`
+            Authorization: `Bearer ${token}`
         }
     });
     return response.data;
 }
 //all posts
-const fetchPosts = async()=>{
+const fetchPosts = async () => {
     const posts = await axios.get(`${BASE_URL}/posts/getAllPosts`);
     return posts.data;
 }
 
 //fetch post by user
-const fetchPostsByUser = async (id)=>{
+const fetchPostsByUser = async (id) => {
     const posts = await axios.get(`${BASE_URL}/posts/profile/${id}`);
     return posts.data;
 }
