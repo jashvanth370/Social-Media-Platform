@@ -1,5 +1,6 @@
 const { userVerification } = require('../middleware/authMiddleware');
 const User = require('../models/Users');
+const Notification = require('../models/Notification');
 
 // GET user by ID (from token)
 module.exports.UserGetById = async (req, res) => {
@@ -93,6 +94,15 @@ module.exports.FollowUser = async (req, res) => {
 
     await targetUser.save();
     await currentUser.save();
+
+    // Create notification for the followed user
+    await Notification.create({
+      receiverId: targetUserId,
+      senderId: currentUserId,
+      type: 'follow',
+      message: `${currentUser.name} started following you`,
+      url: `/profile/${currentUserId}`
+    });
 
     res.status(200).json({
       message: 'User followed successfully',

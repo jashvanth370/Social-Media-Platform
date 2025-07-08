@@ -3,6 +3,7 @@ const Post = require('../models/POst');
 const Users = require('../models/Users');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+const Notification = require('../models/Notification');
 
 //get all posts
 module.exports.GetAllPosts = async (req, res) => {
@@ -79,6 +80,18 @@ module.exports.CommentPost = async (req, res) => {
         post.comments.push(newComment);
         await post.save();
 
+        // Create notification for post author (if not commenting on own post)
+        if (post.author.toString() !== userId) {
+            await Notification.create({
+                receiverId: post.author,
+                senderId: userId,
+                type: 'comment',
+                postId: post._id,
+                message: `${user.name} commented on your post`,
+                url: `/post/${post._id}`
+            });
+        }
+
         res.status(200).json({ message: "Comment added", post });
     } catch (error) {
         console.error(error);
@@ -99,13 +112,28 @@ module.exports.likePost = async (req, res) => {
             return res.status(404).json({ message: "Post not found" });
         }
 
+        let action = '';
         if (!post.likes.includes(userId)) {
             post.likes.push(userId);
             await post.save();
+            action = 'liked';
+            // Create notification for post author (if not liking own post)
+            if (post.author.toString() !== userId) {
+                const user = await Users.findById(userId);
+                await Notification.create({
+                    receiverId: post.author,
+                    senderId: userId,
+                    type: 'like',
+                    postId: post._id,
+                    message: `${user.name} liked your post`,
+                    url: `/post/${post._id}`
+                });
+            }
             return res.status(200).json({ message: 'Post liked', post: post });
         } else {
             post.likes.pull(userId);
             await post.save();
+            action = 'unliked';
             return res.status(200).json({ message: 'Post unliked', post: post });
         }
     } catch (error) {
