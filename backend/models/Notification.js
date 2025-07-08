@@ -4,7 +4,8 @@ const NotificationSchema = mongoose.Schema({
     receiverId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        index: true
     },
     senderId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,9 +22,18 @@ const NotificationSchema = mongoose.Schema({
         ref: 'Post',
         default: null
     },
+    message: {
+        type: String,
+        default: ''
+    },
+    url: {
+        type: String,
+        default: ''
+    },
     isRead: {
         type: Boolean,
-        default: false
+        default: false,
+        index: true
     },
     createdAt: {
         type: Date,
