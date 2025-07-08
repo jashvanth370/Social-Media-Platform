@@ -1,22 +1,14 @@
 const express = require('express')
-router = express.Router();
-const Notification = require('../models/Notification');
+const router = express.Router();
+const NotificationController = require('../controllers/NotificationController');
 
-router.post('/', async (req, res) => {
-    try {
-        const { receiverId, senderId,  type, postId } = req.body;
-        const notification = new Notification({
-            receiverId,
-            senderId,
-            type,
-            postId: postId || null
-        });
+// Create a notification
+router.post('/', NotificationController.createNotification);
 
-        const savedNotification = await notification.save();
-        res.status(201).json(savedNotification);
-    } catch (err) {
-        res.status(500).json({ error: 'Error fetching user data' });
-    }
-})
+// Get all notifications for a user (sorted, unread first)
+router.get('/:userId', NotificationController.getNotificationsByUser);
+
+// Mark a notification as read
+router.patch('/:id/read', NotificationController.markAsRead);
 
 module.exports = router;
