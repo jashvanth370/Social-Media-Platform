@@ -8,6 +8,7 @@ import PostCard from './components/PostCard';
 import FeedPage from './pages/FeedPage';
 import UserProfile from './pages/UserProfilePage';
 import Footer from './components/Footer';
+import NotificationsPage from './pages/NotificationsPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path='/post-card' element={<PostCard />} />
             <Route path='/feed-page' element={<FeedPage />} />
             <Route path='/profile/:id' element={<UserProfile />} />
+            <Route path='/notifications' element={<NotificationsPage />} />
           </Routes>
         </main>
         <Footer />

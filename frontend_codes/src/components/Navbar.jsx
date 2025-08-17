@@ -2,13 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import userApi from '../api/userApi';
+import notificationApi from '../api/notificationApi';
 
 function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Fetch notifications for the logged-in user
+  const fetchNotifications = async (userId) => {
+    try {
+      const data = await notificationApi.getNotifications(userId);
+      setNotifications(data);
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -24,6 +37,8 @@ function Navbar() {
             const userId = decoded.id || decoded._id;
             const profile = await userApi.userProfile(userId);
             setUserProfile(profile);
+            // Fetch notifications
+            fetchNotifications(userId);
           } catch (error) {
             console.error('Failed to fetch user profile:', error);
           }
@@ -35,13 +50,30 @@ function Navbar() {
         setIsAuthenticated(false);
         setCurrentUser(null);
         setUserProfile(null);
+        setNotifications([]);
       }
     } else {
       setIsAuthenticated(false);
       setCurrentUser(null);
       setUserProfile(null);
+      setNotifications([]);
     }
   }, [location]);
+
+  // Count unread notifications
+  const unreadCount = notifications.filter(n => !n.isRead).length;
+
+  // Mark notification as read and navigate
+  const handleNotificationClick = async (notification) => {
+    if (!notification.isRead) {
+      await notificationApi.markAsRead(notification._id);
+      setNotifications((prev) => prev.map(n => n._id === notification._id ? { ...n, isRead: true } : n));
+    }
+    setShowDropdown(false);
+    if (notification.url) {
+      navigate(notification.url);
+    }
+  };
 
   const handleLogout = () => {
     const isLogout = window.confirm('Are you sure you want to logout?');
@@ -90,7 +122,47 @@ function Navbar() {
             )}
           </ul>
 
-          <ul className="navbar-nav">
+          <ul className="navbar-nav align-items-center">
+            {isAuthenticated && (
+              <li className="nav-item dropdown position-relative">
+                <button
+                  className="btn btn-link nav-link position-relative p-0"
+                  style={{ color: 'white' }}
+                  onClick={() => setShowDropdown((prev) => !prev)}
+                  aria-label="Notifications"
+                >
+                  <i className="bi bi-bell fs-4"></i>
+                  {unreadCount > 0 && (
+                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+                {showDropdown && (
+                  <div className="dropdown-menu dropdown-menu-end show mt-2 p-0 shadow" style={{ minWidth: '320px', maxHeight: '400px', overflowY: 'auto' }}>
+                    <div className="p-3 border-bottom fw-bold">Notifications</div>
+                    {notifications.length === 0 ? (
+                      <div className="p-3 text-muted">No notifications</div>
+                    ) : (
+                      notifications.slice(0, 10).map((notification) => (
+                        <button
+                          key={notification._id}
+                          className={`dropdown-item d-flex align-items-start gap-2${notification.isRead ? '' : ' bg-light fw-bold'}`}
+                          onClick={() => handleNotificationClick(notification)}
+                          style={{ whiteSpace: 'normal' }}
+                        >
+                          <i className={`bi me-2 ${notification.type === 'like' ? 'bi-hand-thumbs-up' : notification.type === 'comment' ? 'bi-chat-left-text' : 'bi-person-plus'}`}></i>
+                          <span>{notification.message || `${notification.type} notification`}</span>
+                          <span className="ms-auto small text-muted">{new Date(notification.createdAt).toLocaleString()}</span>
+                        </button>
+                      ))
+                    )}
+                    <div className="dropdown-divider"></div>
+                    <button className="dropdown-item text-center text-primary" onClick={() => navigate('/notifications')}>View All</button>
+                  </div>
+                )}
+              </li>
+            )}
             {!isAuthenticated ? (
               <>
                 <li className="nav-item">
